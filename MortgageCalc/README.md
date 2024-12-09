@@ -36,8 +36,15 @@ This Java program provides a graphical user interface (GUI) to calculate monthly
 4. **Exit the Program**:
    - Click the `Exit` button to close the application.
 
-**Technologies Used
-**
-Java Swing: For GUI design and layout.
-Java AWT: For event handling.
-DefaultTableModel: To manage the table displaying payment details.
+**Technologies Used**
+   Java Swing: For GUI design and layout.
+   Java AWT: For event handling.
+   DefaultTableModel: To manage the table displaying payment details.
+
+**How to complie and run:**
+   javac MortgageCalculatorUI.java
+   java MortgageCalculatorUI.java
+
+
+   
+
