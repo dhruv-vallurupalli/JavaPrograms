@@ -194,8 +194,8 @@ public class EmployeeHoursTracker {
 
     private void sendEmail(String employeeEmail, String supervisorEmail, String messageContent) throws Exception {
         String host = "smtp.gmail.com";
-        String from = "kiranval@gmail.com"; // Replace with your email
-        String password = "xaub xokb qkpx shse"; // Replace with your app password
+        String from = "xxxxxxxx@gmail.com"; // Replace with your email
+        String password = "xxxx xxxx xxxx xxxx"; // Replace with your app password
 
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
