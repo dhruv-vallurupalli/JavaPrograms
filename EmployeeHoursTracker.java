@@ -2,13 +2,15 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 
 public class EmployeeHoursTracker {
     private JLabel totalHoursLabel;
-    private boolean updatingTable = false; // Guard flag to prevent recursion
+    private boolean updatingTable = false;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new EmployeeHoursTracker().createAndShowGUI());
@@ -17,7 +19,7 @@ public class EmployeeHoursTracker {
     private void createAndShowGUI() {
         JFrame frame = new JFrame("Employee Hours Tracker");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 1000); // Adjusted height for better layout
+        frame.setSize(800, 1000);
         frame.setLayout(new BorderLayout());
 
         // Main Panel with Vertical Layout to hold all sections
@@ -58,7 +60,7 @@ public class EmployeeHoursTracker {
         // Select Two-Week Period Panel
         JPanel datePanel = createSectionPanel("Select Two-Week Period");
         JComboBox<String> dateComboBox = new JComboBox<>();
-        dateComboBox.addItem("Mon Dec 2 2024 - Sun Dec 15 2024"); // Example period
+        populateDateDropdown(dateComboBox);
         datePanel.add(new JLabel("Select Period:"));
         datePanel.add(dateComboBox);
         mainPanel.add(datePanel);
@@ -134,7 +136,7 @@ public class EmployeeHoursTracker {
         mainPanel.add(summaryPanel);
 
         // Add Main Panel to Frame
-        frame.add(new JScrollPane(mainPanel)); // Add scroll pane for better visibility in small windows
+        frame.add(new JScrollPane(mainPanel));
         frame.setVisible(true);
     }
 
@@ -154,6 +156,26 @@ public class EmployeeHoursTracker {
             grandTotal += Integer.parseInt(tableModel.getValueAt(row, 8).toString());
         }
         totalHoursLabel.setText("Total Hours Worked: " + grandTotal);
+    }
+
+    private void populateDateDropdown(JComboBox<String> dateComboBox) {
+        LocalDate startDate = LocalDate.of(2024, 1, 1); // Base date
+        LocalDate currentDate = LocalDate.now(); // Today's date
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM d yyyy");
+
+        // Populate the dropdown with two-week periods
+        while (startDate.isBefore(currentDate.plusMonths(6))) { // Up to 6 months into the future
+            LocalDate endDate = startDate.plusDays(13); // Two-week period
+            String period = startDate.format(formatter) + " - " + endDate.format(formatter);
+            dateComboBox.addItem(period);
+            startDate = startDate.plusWeeks(2); // Move to the next two-week period
+        }
+
+        // Set the current two-week period as default
+        LocalDate currentWeekStart = currentDate.with(java.time.DayOfWeek.MONDAY);
+        LocalDate currentWeekEnd = currentWeekStart.plusDays(13);
+        String currentPeriod = currentWeekStart.format(formatter) + " - " + currentWeekEnd.format(formatter);
+        dateComboBox.setSelectedItem(currentPeriod);
     }
 
     private String generateEmailContent(String empName, String empPhone, String empEmail, String project,
@@ -194,7 +216,7 @@ public class EmployeeHoursTracker {
 
     private void sendEmail(String employeeEmail, String supervisorEmail, String messageContent) throws Exception {
         String host = "smtp.gmail.com";
-        String from = "xxxxxxxx@gmail.com"; // Replace with your email
+        String from = "xxxx@gmail.com"; // Replace with your email
         String password = "xxxx xxxx xxxx xxxx"; // Replace with your app password
 
         Properties props = new Properties();
